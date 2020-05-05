@@ -61,5 +61,40 @@ public class hospital {
 		}
 		return output;
 	}	
+	public String addHospitalDetails(String hCode, String hName, String cDoc, String type, String phone, String address, String desc) {
+		
+		String output = "";
+		try{
+			Connection con = connect();
+			
+			if (con == null){
+					return "Error while connecting to the database for inserting."; 
+				}
 	
+			// create a prepared statement
+			String query = " insert into hospitaldetails (`hCode`,`hName`,`cDoc`,`type`,`phone`,`address`,`desc`)" + " values (?,?,?, ?, ?, ?,?)";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			
+			preparedStmt.setString(1, hCode);
+			preparedStmt.setString(2, hName);
+			preparedStmt.setString(3, cDoc);
+			preparedStmt.setString(4, type);
+			preparedStmt.setString(5, phone);
+			preparedStmt.setString(6, address);
+			preparedStmt.setString(7, desc);
+	
+			// execute the statement
+			preparedStmt.execute();
+			con.close();
+			String newHospitals = getHospitalDetails();
+			output = "{\"status\":\"success\", \"data\": \"" +newHospitals + "\"}";
+			
+			
+		}catch (Exception e){
+			output = "{\"status\":\"error\", \"data\":\"Error while inserting the hospital details.\"}";
+					System.err.println(e.getMessage());
+			}
+		return output;
+	}	
 }

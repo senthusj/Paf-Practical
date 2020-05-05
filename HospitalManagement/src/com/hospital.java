@@ -133,5 +133,29 @@ public String updateHospital(String HID,String hCode, String hName, String cDoc,
 		return output;
 
 	}
+public String deleteHospital(String HID) {
+	String output = "";
+	try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for deleting.";
+			}
+		// create a prepared statement
+		String query = "delete from hospitaldetails where HID=?";
+		PreparedStatement preparedStmt = con.prepareStatement(query);
+		// binding values
+		preparedStmt.setInt(1, Integer.parseInt(HID));
+		// execute the statement
+		preparedStmt.execute();
+		con.close();
+		String newHospitals = getHospitalDetails();
+		output = "{\"status\":\"success\", \"data\": \"" +newHospitals + "\"}";
+		
+	} catch (Exception e) {
+		output = "{\"status\":\"error\", \"data\":\"Error while deleting the hospital.\"}";
+				System.err.println(e.getMessage());
+	}
+	return output;
+}
 
 }
